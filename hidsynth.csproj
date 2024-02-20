@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="samples\**" />
+    <EmbeddedResource Remove="samples\**" />
+    <None Remove="samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="samples2\backspace_press_1.wav" />
+    <None Remove="samples2\backspace_release.wav" />
+    <None Remove="samples2\enter_press_1.wav" />
+    <None Remove="samples2\enter_release.wav" />
+    <None Remove="samples2\escape_press_1.wav" />
+    <None Remove="samples2\escape_release.wav" />
+    <None Remove="samples2\lmouse_down.wav" />
+    <None Remove="samples2\lmouse_up.wav" />
+    <None Remove="samples2\normal_press_1.wav" />
+    <None Remove="samples2\normal_press_2.wav" />
+    <None Remove="samples2\normal_release.wav" />
+    <None Remove="samples2\rmouse_down.wav" />
+    <None Remove="samples2\rmouse_up.wav" />
+    <None Remove="samples2\shift_press_1.wav" />
+    <None Remove="samples2\shift_press_2.wav" />
+    <None Remove="samples2\shift_release.wav" />
+    <None Remove="samples2\space_press_1.wav" />
+    <None Remove="samples2\space_press_2.wav" />
+    <None Remove="samples2\space_release.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="samples2\backspace_press_1.wav" />
+    <EmbeddedResource Include="samples2\backspace_release.wav" />
+    <EmbeddedResource Include="samples2\enter_press_1.wav" />
+    <EmbeddedResource Include="samples2\enter_release.wav" />
+    <EmbeddedResource Include="samples2\escape_press_1.wav" />
+    <EmbeddedResource Include="samples2\escape_release.wav" />
+    <EmbeddedResource Include="samples2\lmouse_down.wav" />
+    <EmbeddedResource Include="samples2\lmouse_up.wav" />
+    <EmbeddedResource Include="samples2\normal_press_1.wav" />
+    <EmbeddedResource Include="samples2\normal_press_2.wav" />
+    <EmbeddedResource Include="samples2\normal_release.wav" />
+    <EmbeddedResource Include="samples2\rmouse_down.wav" />
+    <EmbeddedResource Include="samples2\rmouse_up.wav" />
+    <EmbeddedResource Include="samples2\shift_press_1.wav" />
+    <EmbeddedResource Include="samples2\shift_press_2.wav" />
+    <EmbeddedResource Include="samples2\shift_release.wav" />
+    <EmbeddedResource Include="samples2\space_press_1.wav" />
+    <EmbeddedResource Include="samples2\space_press_2.wav" />
+    <EmbeddedResource Include="samples2\space_release.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Topten.WindowsAPI" Version="1.0.126" />
+  </ItemGroup>
+
+</Project>
