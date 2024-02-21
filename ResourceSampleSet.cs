@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace hidsynth
 {
-    internal class SampleSet
+
+    internal class ResourceSampleSet : ISampleSet
     {
-        public SampleSet()
+        public ResourceSampleSet()
         {
         }
         
-        public int SampleRate = 0;
+        public int SampleRate { get; private set; }
+
         Dictionary<string, float[]> samples = new();
 
         public float[] GetSamples(int eventId, bool press)

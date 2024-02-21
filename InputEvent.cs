@@ -1,7 +1,10 @@
-﻿struct InputEvent
+﻿namespace hidsynth
 {
-    public long timeStamp;
-    public int eventId;
-    public bool press;
-}
+    struct InputEvent
+    {
+        public long timeStamp;
+        public int eventId;
+        public bool press;
+    }
 
+}

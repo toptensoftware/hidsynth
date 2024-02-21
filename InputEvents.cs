@@ -15,7 +15,7 @@ namespace hidsynth
             ));
         }
 
-        public void Load(string filename)
+        public void Load(string filename, long offset = 0)
         {
             Clear();
             foreach (var l in System.IO.File.ReadAllLines(filename))
@@ -25,7 +25,7 @@ namespace hidsynth
                 {
                     var e = new InputEvent()
                     {
-                        timeStamp = long.Parse(parts[0]),
+                        timeStamp = long.Parse(parts[0]) + offset,
                         eventId = int.Parse(parts[1]),
                         press = parts[2] == "True",
                     };

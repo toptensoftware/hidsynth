@@ -18,12 +18,13 @@ namespace hidsynth
 
         public void Run()
         {
-            sw.Restart();
-            startTime = GetTimeStamp();
+            _sw.Restart();
+            _startTime = GetTimeStamp();
+            _count = 0;
 
             // Install keyboard hook
-            keyboardHook = WinApi.SetWindowsHookEx(WinApi.WH_KEYBOARD_LL, KeyboardHookProc, IntPtr.Zero, 0);
-            mouseHook = WinApi.SetWindowsHookEx(WinApi.WH_MOUSE_LL, MouseHookProc, IntPtr.Zero, 0);
+            _keyboardHook = WinApi.SetWindowsHookEx(WinApi.WH_KEYBOARD_LL, KeyboardHookProc, IntPtr.Zero, 0);
+            _mouseHook = WinApi.SetWindowsHookEx(WinApi.WH_MOUSE_LL, MouseHookProc, IntPtr.Zero, 0);
 
             uint mainThreadId = WinApi.GetCurrentThreadId();
 
@@ -39,10 +40,10 @@ namespace hidsynth
 
             // Clean up
             Console.CancelKeyPress -= cancelHandler;
-            WinApi.UnhookWindowsHookEx(keyboardHook);
-            WinApi.UnhookWindowsHookEx(mouseHook);
-            keyboardHook = IntPtr.Zero;
-            mouseHook = IntPtr.Zero;
+            WinApi.UnhookWindowsHookEx(_keyboardHook);
+            WinApi.UnhookWindowsHookEx(_mouseHook);
+            _keyboardHook = IntPtr.Zero;
+            _mouseHook = IntPtr.Zero;
 
             void cancelHandler(object sender, ConsoleCancelEventArgs args)
             {
@@ -54,14 +55,15 @@ namespace hidsynth
 
         long GetTimeStamp()
         {
-            return sw.ElapsedTicks * 1000000 / Stopwatch.Frequency;
+            return _sw.ElapsedTicks * 1000000 / Stopwatch.Frequency;
         }
 
-        HashSet<int> heldKeys = new HashSet<int>();
-        IntPtr keyboardHook = IntPtr.Zero;
-        IntPtr mouseHook = IntPtr.Zero;
-        Stopwatch sw = new Stopwatch();
-        long startTime;
+        HashSet<int> _heldKeys = new HashSet<int>();
+        IntPtr _keyboardHook = IntPtr.Zero;
+        IntPtr _mouseHook = IntPtr.Zero;
+        Stopwatch _sw = new Stopwatch();
+        long _startTime;
+        int _count;
 
         public Action<InputEvent> OnEvent;
 
@@ -69,13 +71,12 @@ namespace hidsynth
         {
             OnEvent?.Invoke(new InputEvent()
             {
-                timeStamp = GetTimeStamp() - startTime,
+                timeStamp = GetTimeStamp() - _startTime,
                 eventId = eventId,
                 press = press,
             });
 
-            
-            //Console.Write($"{events.Count} events\r");
+            Console.Write($"{++_count} events\r");
         }
 
 
@@ -89,20 +90,20 @@ namespace hidsynth
 
                 if (isPress)
                 {
-                    if (heldKeys.Contains(scanCode))
+                    if (_heldKeys.Contains(scanCode))
                         goto exit;
-                    heldKeys.Add(scanCode);
+                    _heldKeys.Add(scanCode);
                 }
                 else
                 {
-                    heldKeys.Remove(scanCode);
+                    _heldKeys.Remove(scanCode);
                 }
 
                 FireEvent(scanCode, isPress);
             }
 
         exit:
-            return WinApi.CallNextHookEx(keyboardHook, code, wParam, lParam);
+            return WinApi.CallNextHookEx(_keyboardHook, code, wParam, lParam);
         }
 
         IntPtr MouseHookProc(int code, IntPtr wParam, IntPtr lParam)
@@ -136,7 +137,7 @@ namespace hidsynth
                         break;
                 }
             }
-            return WinApi.CallNextHookEx(keyboardHook, code, wParam, lParam);
+            return WinApi.CallNextHookEx(_keyboardHook, code, wParam, lParam);
         }
     }
 }

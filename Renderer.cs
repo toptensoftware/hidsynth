@@ -8,12 +8,12 @@ namespace hidsynth
 {
     internal class Renderer
     {
-        public Renderer(SampleSet sampleSet)
+        public Renderer(ISampleSet sampleSet)
         {
             _sampleSet = sampleSet;
         }
 
-        SampleSet _sampleSet;
+        ISampleSet _sampleSet;
 
         public void Render(InputEvents events, string filename)
         {

@@ -24,12 +24,19 @@ else
     InputHook hook = new InputHook();
     hook.OnEvent = (e) => events.Add(e);
     hook.Run();
-    events.Save(outBase + ".txt");
+    //events.Save(outBase + ".txt");
 }
 
 // Load sample set
-var sampleSet = new SampleSet();
+var sampleSet = new ResourceSampleSet();
 sampleSet.LoadFromResource();
+/*
+var sampleSet = new RecordedSampleSet(
+    @"C:\Users\Brad\Dropbox\Videos\hidsynth\sampleSet.wav",
+    @"C:\Users\Brad\Dropbox\Videos\hidsynth\sampleSet.txt",
+    14_528_623
+    );
+*/
 
 // Render
 var renderer = new Renderer(sampleSet);
