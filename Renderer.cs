@@ -40,9 +40,7 @@ namespace hidsynth
                             uint offset = startSample - currentSample;
                             var samples = _sampleSet.GetSamples(e.eventId, e.press);
 
-                            var gain = 1.0f;
-                            if (e.press)
-                                gain = (float)(DbToScalar(-r.NextDouble() * 45));
+                            float gain = (float)(0.1 + r.NextDouble() * 0.9);
                             var voice = new Voice(samples, startSample - currentSample, gain);
                             activeVoices.Add(voice);
                             events.RemoveAt(0);
