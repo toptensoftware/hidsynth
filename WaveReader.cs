@@ -111,7 +111,7 @@ namespace hidsynth
                     _fs.Seek(chunk.length, SeekOrigin.Current);
                 }
             }
-            catch (System.Exception x)
+            catch (System.Exception)
             {
                 if (_fs!=null)
                     _fs.Close();

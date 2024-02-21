@@ -1,4 +1,5 @@
 ﻿using hidsynth;
+using System.Diagnostics;
 using System.Net.Security;
 using System.Runtime.InteropServices;
 using Topten.WindowsAPI;
@@ -6,10 +7,11 @@ using Topten.WindowsAPI;
 string outBase;
 List<EVENT> events = new();
 HashSet<int> heldKeys = new HashSet<int>();
-uint startTime = WinApi.GetTickCount();
 IntPtr keyboardHook = IntPtr.Zero;
 IntPtr mouseHook = IntPtr.Zero;
-
+Stopwatch sw = new Stopwatch();
+sw.Start();
+long startTime = GetTimeStamp();
 
 if (args.Length > 0)
 {
@@ -22,7 +24,7 @@ if (args.Length > 0)
         {
             var e = new EVENT()
             {
-                timeStamp = uint.Parse(parts[0]),
+                timeStamp = long.Parse(parts[0]),
                 eventId = int.Parse(parts[1]),
                 press = parts[2] == "True",
             };
@@ -42,13 +44,13 @@ else
     Console.CancelKeyPress += (sender, args) =>
     {
         Console.WriteLine("\nCancelling...\n");
-        WinApi.PostThreadMessage(mainThreadId, WinApi.WM_QUIT, 0, 0);
+        WinApi.PostThreadMessage(mainThreadId, WinApi.WM_QUIT, IntPtr.Zero, IntPtr.Zero);
         args.Cancel = true;
     };
 
     // Message loop
     WinApi.MSG msg;
-    while (WinApi.GetMessage(out msg, 0, 0, 0))
+    while (WinApi.GetMessage(out msg, IntPtr.Zero, 0, 0))
     {
         WinApi.DispatchMessage(ref msg);
     }
@@ -110,7 +112,7 @@ using (var wr = new WaveWriter($"{outBase}.wav", sampleRate))
         while (nextEvent < events.Count)
         {
             var e = events[0];
-            uint startSample = millisToSamples(e.timeStamp);
+            uint startSample = microsToSamples(e.timeStamp);
             if (startSample < currentSample + buf.Length)
             {
                 uint offset = startSample - currentSample;
@@ -197,16 +199,16 @@ Console.WriteLine($"Rendered {(double)currentSample/sampleRate:N2} seconds at {s
 
 return 0;
 
-uint millisToSamples(uint millis)
+uint microsToSamples(long millis)
 {
-    return (uint)(((ulong)millis * (ulong)sampleRate) / 1000);
+    return (uint)(((ulong)millis * (ulong)sampleRate) / 1000000);
 }
 
 void OnEvent(int eventId, bool press)
 {
     events.Add(new EVENT()
     {
-        timeStamp = WinApi.GetTickCount() - startTime,
+        timeStamp = GetTimeStamp() - startTime,
         eventId = eventId,
         press = press,
     });
@@ -282,9 +284,15 @@ double DbToScalar(double db)
     return Math.Pow(10.0, db / 20.0);
 }
 
+long GetTimeStamp()
+{
+    return sw.ElapsedTicks * 1000000 / Stopwatch.Frequency;
+}
+
+
 struct EVENT
 {
-    public uint timeStamp;
+    public long timeStamp;
     public int eventId;
     public bool press;
 }
@@ -329,3 +337,4 @@ class Voice
     uint _startOffset;
 
 }
+
